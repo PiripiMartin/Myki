@@ -1,0 +1,45 @@
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+list_one = []
+list_two = []
+
+@app.route('/api/lists', methods=['GET'])
+def get_lists():
+    return jsonify({'list_one': list_one, 'list_two': list_two})
+
+@app.route('/api/list_one', methods=['POST'])
+def add_to_list_one():
+    data = request.json
+    item = data.get('item')
+    if item:
+        list_one.append(item)
+    return jsonify({'list_one': list_one}), 201
+
+@app.route('/api/list_one', methods=['DELETE'])
+def remove_from_list_one():
+    data = request.json
+    item = data.get('item')
+    if item in list_one:
+        list_one.remove(item)  # Only removes the specific item if it exists in the list
+    return jsonify({'list_one': list_one})
+
+@app.route('/api/list_two', methods=['POST'])
+def add_to_list_two():
+    data = request.json
+    item = data.get('item')
+    if item:
+        list_two.append(item)
+    return jsonify({'list_two': list_two}), 201
+
+@app.route('/api/list_two', methods=['DELETE'])
+def remove_from_list_two():
+    data = request.json
+    item = data.get('item')
+    if item in list_two:
+        list_two.remove(item)
+    return jsonify({'list_two': list_two})
+
+if __name__ == '__main__':
+    app.run(debug=True)
